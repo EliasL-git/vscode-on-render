@@ -7,4 +7,4 @@ Enjoy!
 
 `OPENVSCODE_CONNECTION_TOKEN` is preconfigured in `render.yaml` with `generateValue: true`, so new Render deployments get a random connection token by default.
 You can override this environment variable in Render if you want to set your own token value.
-At startup, token values are sanitized to characters supported by OpenVSCode (`0-9`, `a-z`, `A-Z`, `-`) to prevent boot failures from incompatible generated values.
+At startup, token values that include unsupported characters are deterministically converted to a SHA-256 hex token so OpenVSCode accepts them and startup does not fail.

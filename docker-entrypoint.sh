@@ -6,13 +6,16 @@ HOST="0.0.0.0"
 PORT="${PORT:-3000}"
 
 if [ -n "${OPENVSCODE_CONNECTION_TOKEN:-}" ]; then
-  SANITIZED_TOKEN="$(printf '%s' "${OPENVSCODE_CONNECTION_TOKEN}" | sed 's/[^0-9A-Za-z-]/-/g')"
+  case "${OPENVSCODE_CONNECTION_TOKEN}" in
+    *[!0-9A-Za-z-]*)
+      CONNECTION_TOKEN="$(printf '%s' "${OPENVSCODE_CONNECTION_TOKEN}" | sha256sum | awk '{print $1}')"
+      ;;
+    *)
+      CONNECTION_TOKEN="${OPENVSCODE_CONNECTION_TOKEN}"
+      ;;
+  esac
 
-  if [ -z "${SANITIZED_TOKEN}" ]; then
-    SANITIZED_TOKEN="$(head -c 128 /dev/urandom | tr -dc '0-9A-Za-z' | head -c 32)"
-  fi
-
-  exec "${SERVER_BIN}" --host "${HOST}" --port "${PORT}" --connection-token "${SANITIZED_TOKEN}"
+  exec "${SERVER_BIN}" --host "${HOST}" --port "${PORT}" --connection-token "${CONNECTION_TOKEN}"
 fi
 
 exec "${SERVER_BIN}" --host "${HOST}" --port "${PORT}" --without-connection-token
