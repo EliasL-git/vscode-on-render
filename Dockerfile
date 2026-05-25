@@ -1,9 +1,5 @@
 FROM gitpod/openvscode-server:latest
 
-USER root
+USER openvscode-server
 
-RUN [ "/bin/sh", "-c", "ln -s /home/openvscode-server-v*/server.sh /home/server.sh"]
-
-USER vscode-server
-
-ENTRYPOINT [ "/bin/sh", "-c", "/home/server.sh"]
+ENTRYPOINT ["/bin/sh", "-c", "exec /home/.openvscode-server/bin/openvscode-server --host 0.0.0.0 --port \"${PORT:-3000}\" --without-connection-token"]
