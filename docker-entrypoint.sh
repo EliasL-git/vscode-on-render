@@ -10,7 +10,11 @@ if [ -n "${OPENVSCODE_CONNECTION_TOKEN:-}" ]; then
     CONNECTION_TOKEN="${OPENVSCODE_CONNECTION_TOKEN}"
   else
     echo "OPENVSCODE_CONNECTION_TOKEN contains unsupported characters; deriving a compatible token value." >&2
-    CONNECTION_TOKEN="$(printf '%s' "${OPENVSCODE_CONNECTION_TOKEN}" | sha256sum | awk '{print $1}')"
+    if command -v sha256sum >/dev/null 2>&1; then
+      CONNECTION_TOKEN="$(printf '%s' "${OPENVSCODE_CONNECTION_TOKEN}" | sha256sum | awk '{print $1}')"
+    else
+      CONNECTION_TOKEN="$(printf '%s' "${OPENVSCODE_CONNECTION_TOKEN}" | sed 's/[^0-9A-Za-z-]/-/g')"
+    fi
   fi
 
   exec "${SERVER_BIN}" --host "${HOST}" --port "${PORT}" --connection-token "${CONNECTION_TOKEN}"
