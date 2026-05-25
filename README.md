@@ -5,5 +5,5 @@ Deploy Gitpod's VSCode Webserver on Render
 
 Enjoy!
 
-Optional: set `OPENVSCODE_CONNECTION_TOKEN` in Render environment variables to require a connection token.
-⚠️ **Security warning:** if `OPENVSCODE_CONNECTION_TOKEN` is not set, the server starts without authentication and is accessible to anyone who can reach your service URL.
+`OPENVSCODE_CONNECTION_TOKEN` is preconfigured in `render.yaml` with `generateValue: true`, so new Render deployments get a random connection token by default.
+You can override this environment variable in Render if you want to set your own token value.

@@ -4,6 +4,9 @@ services:
   env: docker
   repo: https://github.com/render-examples/gitpod-openvscode-server-example.git
   autoDeploy: false
+  envVars:
+    - key: OPENVSCODE_CONNECTION_TOKEN
+      generateValue: true
   disk:
     name: data
     mountPath: /home/workspace
